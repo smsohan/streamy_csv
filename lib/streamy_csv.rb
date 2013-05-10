@@ -15,6 +15,7 @@ module StreamyCsv
     set_file_headers(file_name)
 
     response.status = 200
+
     self.response_body = csv_lines(header_row, &block)
   end
 
