@@ -26,7 +26,7 @@ In your model:
       end
 
       def to_csv_row
-        CSV::Row(name: name, title: title)
+        CSV::Row([:name, :title], ['John', 'Mr'])
       end
 
     end
