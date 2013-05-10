@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["sohan39@gmail.com"]
   gem.description   = %q{Streamy CSV lets you stream live generated CSV files}
   gem.summary       = %q{Provides a simple API for your controllers to stream CSV files one row at a time}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/smsohan/streamy_csv"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
