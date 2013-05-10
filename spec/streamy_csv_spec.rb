@@ -46,17 +46,18 @@ describe StreamyCsv do
     end
 
     it 'streams the csv file' do
+      row_1 = CSV::Row.new([:name, :title], ['AB', 'Mr'])
+      row_2 = CSV::Row.new([:name, :title], ['CD', 'Pres'])
+
+      rows = [@header, row_1]
 
       @controller.stream_csv('abc.csv', @header) do |rows|
-        rows << CSV::Row.new(name: 'AB', title: 'Mr')
-        rows << CSV::Row.new(name: 'CD', title: 'Pres')
+        rows << row_1
+        rows << row_2
       end
 
       @controller.response.status.should == 200
       @controller.response_body.is_a?(Enumerator).should == true
-
-      @controller.response_body.size.should == 3
-
     end
   end
 
