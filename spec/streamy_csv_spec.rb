@@ -55,6 +55,8 @@ describe StreamyCsv do
       @controller.response.status.should == 200
       @controller.response_body.is_a?(Enumerator).should == true
 
+      @controller.response_body.size.should == 3
+
     end
   end
 
