@@ -1,6 +1,6 @@
 # StreamyCsv
 
-Streams CSV files one row at a time as live data is generated instead of waiting for the whole file to be created and then sent to the client. Works on most standard web servers including Nginx, Passenger, Unicorn, Thin etc., but does NOT work on Webrick.
+StreamyCSV streams CSV files one row at a time as live data is generated instead of waiting for the whole file to be created and then sent to the client. Works on most standard web servers including Nginx, Passenger, Unicorn, Thin etc., but does NOT work on Webrick.
 
 ## Installation
 
@@ -22,11 +22,11 @@ In your model:
     class MyModel
 
       def self.header_row
-        CSV::Row([:name, :title], ['Name', 'Title'], true)
+        CSV::Row.new([:name, :title], ['Name', 'Title'], true)
       end
 
       def to_csv_row
-        CSV::Row([:name, :title], ['John', 'Mr'])
+        CSV::Row.new([:name, :title], ['John', 'Mr'])
       end
 
     end
