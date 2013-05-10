@@ -2,6 +2,9 @@
 
 StreamyCSV streams CSV files one row at a time as live data is generated instead of waiting for the whole file to be created and then sent to the client. Works on most standard web servers including Nginx, Passenger, Unicorn, Thin etc., but does NOT work on Webrick.
 
+## Build Status
+[![Build Status](https://travis-ci.org/smsohan/streamy_csv.png)](https://travis-ci.org/smsohan/streamy_csv)
+
 ## Installation
 
 Add this line to your application's Gemfile:
