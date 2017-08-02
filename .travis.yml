@@ -1,2 +1,4 @@
-rvm: 1.9.2
+dist: trusty
+sudo: false
+rvm: 2.2.7
 script: "rake"
