@@ -59,6 +59,40 @@ describe StreamyCsv do
       @controller.response.status.should == 200
       @controller.response_body.is_a?(Enumerator).should == true
     end
+    it 'sanitizes header and contents and streams the csv file' do
+      row_1 = CSV::Row.new([:name, :title], ['AB', 'Mr'])
+      row_2 = CSV::Row.new([:name, :title], ["=cmd|' /C", 'Pres'])
+      header = [:name, "=cmd|' /C"]
+      rows = [header, row_1]
+
+      @controller.stream_csv('abc.csv', @header) do |rows|
+        rows << row_1
+        rows << row_2
+      end
+      @controller.response.status.should == 200
+      @controller.response_body.is_a?(Enumerator).should == true
+      @controller.response_body.take(1)[0].to_s[4].bytes == '\\'.bytes
+      @controller.response_body.take(1)[0].to_s[5].bytes == '|'.bytes
+      @controller.response_body.take(3)[2].to_s[4].bytes == '\\'.bytes
+      @controller.response_body.take(3)[2].to_s[5].bytes == '|'.bytes
+    end
+    it 'does not sanitize the csv if the option provided' do
+      row_1 = CSV::Row.new([:name, :title], ['AB', 'Mr'])
+      row_2 = CSV::Row.new([:name, :title], ["=cmd|' /C", 'Pres'])
+      header = [:name, "=cmd|' /C"]
+      rows = [header, row_1]
+
+      @controller.stream_csv('abc.csv', @header, false) do |rows|
+        rows << row_1
+        rows << row_2
+      end
+      @controller.response.status.should == 200
+      @controller.response_body.is_a?(Enumerator).should == true
+      @controller.response_body.take(1)[0].to_s[4].bytes == 'd'.bytes
+      @controller.response_body.take(1)[0].to_s[5].bytes == '|'.bytes
+      @controller.response_body.take(3)[2].to_s[4].bytes == 'd'.bytes
+      @controller.response_body.take(3)[2].to_s[5].bytes == '|'.bytes
+    end
   end
 
 end
