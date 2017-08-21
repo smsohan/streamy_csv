@@ -30,7 +30,10 @@ module StreamyCsv
   def csv_lines(header_row, &block)
 
     Enumerator.new do |rows|
-      rows << header_row.to_s if header_row
+      def rows.<<(row)
+        super StreamyCsv::InjectionSanitizer.sanitize_csv_row(row).to_s
+      end
+      rows << header_row if header_row
       block.call(rows)
     end
 

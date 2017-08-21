@@ -34,14 +34,14 @@ describe StreamyCsv do
     it 'sets the streaming headers' do
       @controller.stream_csv('abc.csv', @header)
       @controller.headers.should include({'X-Accel-Buffering' => 'no',
-        "Cache-Control" => "no-cache"
+                                          "Cache-Control" => "no-cache"
       })
     end
 
     it 'sets the file headers' do
       @controller.stream_csv('abc.csv', @header)
       @controller.headers.should include({"Content-Type" => "text/csv",
-        "Content-disposition" => "attachment; filename=\"abc.csv\""
+                                          "Content-disposition" => "attachment; filename=\"abc.csv\""
       })
     end
 
@@ -58,6 +58,26 @@ describe StreamyCsv do
 
       @controller.response.status.should == 200
       @controller.response_body.is_a?(Enumerator).should == true
+    end
+
+    it 'sanitizes header and contents and streams the csv file' do
+      header = CSV::Row.new([:name, :title], ['Name', "=cmd|' /C"], true)
+
+      @controller.stream_csv('abc.csv', header) do |rows|
+        rows << CSV::Row.new([:name, :title], ['AB', 'Mr'])
+        rows << CSV::Row.new([:name, :title], ["=cmd|' /C", '-Pres'])
+        rows << CSV::Row.new([:name, :title], ["@something", '+Pres'])
+      end
+
+      @controller.response.status.should == 200
+      @controller.response_body.is_a?(Enumerator).should == true
+      body = @controller.response_body.to_a
+      body.size.should == 4
+
+      body[0].to_s.strip.should == "Name,'=cmd|' /C"
+      body[1].to_s.strip.should == "AB,Mr"
+      body[2].to_s.strip.should == "'=cmd|' /C,'-Pres"
+      body[3].to_s.strip.should == "'@something,'+Pres"
     end
   end
 
