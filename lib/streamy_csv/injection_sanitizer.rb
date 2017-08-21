@@ -7,7 +7,7 @@ module StreamyCsv
       if row.is_a?(CSV::Row)
         sanitized_row = row.dup
         row.each do |title, value|
-          if value.start_with?(*PREFIXES_TO_ESCAPE)
+          if value.to_s.start_with?(*PREFIXES_TO_ESCAPE)
             sanitized_row[title] = "#{ESCAPE_CHAR}#{value}"
           end
         end

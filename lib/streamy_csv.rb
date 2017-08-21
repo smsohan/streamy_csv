@@ -1,4 +1,5 @@
 require "streamy_csv/version"
+require "streamy_csv/injection_sanitizer"
 
 module StreamyCsv
 
