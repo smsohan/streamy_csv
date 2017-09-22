@@ -11,13 +11,13 @@ module StreamyCsv
   #
   #
 
-  def stream_csv(file_name, header_row, &block)
+  def stream_csv(file_name, header_row, sanitize=true, &block)
     set_streaming_headers
     set_file_headers(file_name)
 
     response.status = 200
 
-    self.response_body = csv_lines(header_row, &block)
+    self.response_body = csv_lines(header_row, sanitize, &block)
   end
 
   protected
@@ -28,11 +28,12 @@ module StreamyCsv
     headers.delete("Content-Length")
   end
 
-  def csv_lines(header_row, &block)
-
+  def csv_lines(header_row, sanitize, &block)
     Enumerator.new do |rows|
-      def rows.<<(row)
-        super StreamyCsv::InjectionSanitizer.sanitize_csv_row(row).to_s
+      if sanitize
+        def rows.<<(row)
+          super StreamyCsv::InjectionSanitizer.sanitize_csv_row(row).to_s
+        end
       end
       rows << header_row if header_row
       block.call(rows)
